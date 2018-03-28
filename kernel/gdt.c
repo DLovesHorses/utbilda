@@ -24,7 +24,12 @@ const uint16_t FLAG_GRANULARITY_4KB = 1 << 14;
 uint64_t gdt[3];
 struct GDT_GDTR gdtr;
 
-// Defined in gdt_util.s
+/**
+ * @brief Reloads the segment registers.
+ *
+ * After the GDT is installed, the segment registers must be reloaded.
+ * Defined in <tt>gdt_util.s</tt>
+ */
 void gdt_reload_segment_registers();
 
 void gdt_create_entry(
@@ -67,6 +72,16 @@ void gdt_init() {
 	gdt_reload_segment_registers();
 }
 
+/**
+ * @brief Creates an entry in the GDT with the specified parameters.
+ *
+ * Flags are from constants beginning with @c FLAG, 
+ *
+ * @param index The index of the entry in the GDT to modify.
+ * @param segment_limit The limit of the segment.
+ * @param base_address The base address of the segment.
+ * @param flags The flags to apply to the segment.
+ */
 void gdt_create_entry(
 	int index,
 	uint32_t segment_limit, uint32_t base_address,
@@ -84,6 +99,13 @@ void gdt_create_entry(
 	gdt[index] |= (uint64_t) flags << 40;
 }
 
+/**
+ * @brief Creates a null (zero) entry in the GDT.
+ *
+ * To be used for the first entry in the GDT, which must be zeroed.
+ *
+ * @param index The index of the entry in the GDT to modify.
+ */
 void gdt_create_null_entry(int index) {
 	gdt[index] = 0;
 }
