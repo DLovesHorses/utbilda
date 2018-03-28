@@ -2,7 +2,7 @@ AS:=i686-elf-as
 AS_FLAGS:=
 
 CC:=i686-elf-gcc
-CC_FLAGS:=-std=gnu99 -ffreestanding -O2 -Wall -Wextra -Wpedantic
+CC_FLAGS:=-std=gnu99 -ffreestanding -O2 -Wall -Wextra -Wpedantic -Werror=implicit-function-declaration -MD -MP
 
 LD:=i686-elf-gcc
 LD_FLAGS:=-ffreestanding -O2 -nostdlib -lgcc
@@ -14,10 +14,12 @@ AS_SOURCES:=$(wildcard kernel/*.s)
 CC_SOURCES:=$(wildcard kernel/*.c)
 OBJECTS:=$(AS_SOURCES:.s=.o) $(CC_SOURCES:.c=.o)
 
+HEADER_DEPS:=$(CC_SOURCES:.c=.d)
+
 all: utbilda.iso Makefile
 
 clean:
-	rm -f $(OBJECTS) iso/boot/utbilda.bin utbilda.iso
+	rm -f $(OBJECTS) $(HEADER_DEPS) iso/boot/utbilda.bin utbilda.iso
 
 ###################
 # DEBUGGING TASKS #
@@ -43,5 +45,7 @@ kernel/%.o: kernel/%.s
 
 kernel/%.o: kernel/%.c
 	$(CC) -c $< -o $@ $(CC_FLAGS) -I kernel/include
+
+-include $(HEADER_DEPS)
 
 .PHONY: all clean run_qemu
