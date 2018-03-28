@@ -1,11 +1,6 @@
 #include <stdint.h>
 #include <gdt.h>
 
-struct GDT_GDTR {
-	uint16_t limit;
-	uint32_t base_address;
-} __attribute__((packed));
-
 const uint16_t FLAG_TYPE_DATA_RW = 0x2;
 const uint16_t FLAG_TYPE_CODE_R = 0xA;
 
@@ -22,7 +17,11 @@ const uint16_t FLAG_DEFAULT_OP_SIZE_32 = 1 << 13;
 const uint16_t FLAG_GRANULARITY_4KB = 1 << 14;
 
 uint64_t gdt[3];
-struct GDT_GDTR gdtr;
+
+struct {
+	uint16_t limit;
+	uint32_t base_address;
+} __attribute__((packed)) gdtr;
 
 /**
  * @brief Reloads the segment registers.
