@@ -1,13 +1,11 @@
-#include <stdint.h>
+#include <terminal.h>
 
 void kernel_main() {
-	uint16_t *vga_terminal_buffer = (uint16_t *) 0xB8000;
-	char *str = "Hello, world!";
+	char *str = "Hello, world!\nThis is a test.\nThere's a lot of testing going on here!\n";
+
+	terminal_init();
 
 	while (*str != '\0') {
-		*vga_terminal_buffer = 0x0A << 8 | *str;
-
-		++str;
-		++vga_terminal_buffer;
+		terminal_putch(*str++);
 	}
 }

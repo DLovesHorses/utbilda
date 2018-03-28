@@ -42,6 +42,6 @@ kernel/%.o: kernel/%.s
 	$(AS) $< -o $@ $(AS_FLAGS)
 
 kernel/%.o: kernel/%.c
-	$(CC) -c $< -o $@ $(CC_FLAGS)
+	$(CC) -c $< -o $@ $(CC_FLAGS) -I kernel/include
 
 .PHONY: all clean run_qemu
