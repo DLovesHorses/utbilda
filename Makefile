@@ -12,6 +12,7 @@ QEMU_FLAGS:=-cdrom utbilda.iso
 
 AS_SOURCES:=$(wildcard kernel/*.s)
 CC_SOURCES:=$(wildcard kernel/*.c)
+CC_SOURCES+=$(wildcard kernel/*/*.c)
 OBJECTS:=$(AS_SOURCES:.s=.o) $(CC_SOURCES:.c=.o)
 
 HEADER_DEPS:=$(CC_SOURCES:.c=.d)

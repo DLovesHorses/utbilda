@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <klibc/string.h>
 #include <terminal.h>
 
 const int TERMINAL_WIDTH = 80;
@@ -14,6 +15,10 @@ void terminal_init() {
 
 	cursor_x = 0;
 	cursor_y = 0;
+
+	for (int i = 0; i < TERMINAL_WIDTH * TERMINAL_HEIGHT; ++i) {
+		terminal_buffer[i] = 0x0F << 8 | ' ';
+	}
 }
 
 void terminal_putch(char c) {
@@ -28,16 +33,33 @@ void terminal_putch(char c) {
 	}
 
 	if (cursor_x >= TERMINAL_WIDTH) {
+		// The cursor has gone off the right side of the screen.
+		// Bring it back to the left edge, and move down a row.
 		cursor_x = 0;
 		++cursor_y;
+	}
 
-		if (cursor_y >= TERMINAL_HEIGHT) {
-			// We can't really handle this right now.
-			// Let's just set the cursor back to the very top.
+	if (cursor_y >= TERMINAL_HEIGHT) {
+		// The cursor has gone off the bottom of the screen.
+		// Scroll the terminal up one row, and move the cursor up.
 
-			cursor_x = 0;
-			cursor_y = 0;
+		// Scroll the terminal up one row
+		size_t bytes_per_row = TERMINAL_WIDTH * sizeof(*terminal_buffer);
+		memcpy(
+			terminal_buffer,
+			terminal_buffer + TERMINAL_WIDTH,
+			bytes_per_row * (TERMINAL_HEIGHT - 1)
+		);
+
+		// Clear the bottom line
+		int y = TERMINAL_HEIGHT - 1;
+		uint16_t entry = 0x0F << 8 | ' ';
+		for (int i = 0; i < TERMINAL_WIDTH; ++i) {
+			terminal_buffer[i + y * TERMINAL_WIDTH] = entry;
 		}
+
+		// Move the cursor to the bottom row
+		cursor_y = TERMINAL_HEIGHT - 1;
 	}
 }
 

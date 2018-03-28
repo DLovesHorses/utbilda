@@ -1,8 +1,16 @@
 #include <terminal.h>
 
 void kernel_main() {
-	char *str = "Hello, world!\nThis is a test.\nThere's a lot of testing going on here!\n";
-
 	terminal_init();
-	terminal_puts(str);
+	
+	for (int i = 0; i < 30; ++i) {
+		terminal_putch('0' + i);
+		terminal_putch('\n');
+
+		for (int j = 0; j < 100000000; ++j) {
+			asm volatile("nop");
+		}
+	}
+
+	terminal_puts("No terminating new line here, no new row should appear!");
 }
