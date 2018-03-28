@@ -3,5 +3,6 @@
 
 void terminal_init();
 void terminal_putch(char c);
+void terminal_puts(char *s);
 
 #endif

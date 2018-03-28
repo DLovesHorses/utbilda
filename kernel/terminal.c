@@ -40,3 +40,9 @@ void terminal_putch(char c) {
 		}
 	}
 }
+
+void terminal_puts(char *s) {
+	while (*s) {
+		terminal_putch(*s++);
+	}
+}
