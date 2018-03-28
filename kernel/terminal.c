@@ -10,6 +10,11 @@ uint16_t *terminal_buffer;
 int cursor_x;
 int cursor_y;
 
+/**
+ * @brief Initializes the terminal.
+ *
+ * Sets up internal values and clears the screen, ready to be written to.
+ */
 void terminal_init() {
 	terminal_buffer = (uint16_t *) 0xB8000;
 
@@ -21,6 +26,16 @@ void terminal_init() {
 	}
 }
 
+/**
+ * @brief Writes a single character to the screen, and moves the cursor forward.
+ *
+ * If the new cursor position is off the right-hand edge of the screen, the
+ * cursor is positioned at the start of the next line. If the new cursor
+ * position is off the bottom edge of the screen, the terminal is scrolled up
+ * and the cursor placed at the start of the last line.
+ *
+ * @param c The character to print.
+ */
 void terminal_putch(char c) {
 	if (c != '\n') {
 		uint16_t entry = 0x0F << 8 | c;
@@ -63,6 +78,13 @@ void terminal_putch(char c) {
 	}
 }
 
+/**
+ * @brief Writes a string to the screen, and moves the cursor appropriately.
+ *
+ * @param s The string to print.
+ *
+ * @see terminal_putch
+ */
 void terminal_puts(char *s) {
 	while (*s) {
 		terminal_putch(*s++);

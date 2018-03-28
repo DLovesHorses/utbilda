@@ -1,5 +1,8 @@
 #include <terminal.h>
 
+/**
+ * @brief Kernel main function, called from <tt>boot.s</tt>.
+ */
 void kernel_main() {
 	terminal_init();
 	
