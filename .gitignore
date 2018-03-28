@@ -5,3 +5,6 @@
 
 # Header dependency tracking
 *.d
+
+# Debug enable file
+DEBUG

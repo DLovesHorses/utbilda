@@ -1,0 +1,10 @@
+# Set the directory for the source files
+directory kernel/
+
+# Define a command to reconnect to the remote GDB stub QEMU provides
+define utbilda_qemu_reconnect
+	target remote localhost:1234
+end
+
+# Perform the initial connection
+utbilda_qemu_reconnect
